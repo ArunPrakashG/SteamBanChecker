@@ -9,11 +9,11 @@ namespace SteamBanChecker
 	public class AccountParser
 	{
 		private const string ACCOUNTS_PATH = "accounts.txt";
-		private const string ACCOUNT_DATA_PATH = "accountinfo.txt";
-		private const string PROFILE_LINK_ONLY_PATH = "profiles.txt";
-		private const string BAN_STATUS_PATH = "banstatus.txt";
-		private const string BAN_STATUS_RAW_PATH = "banstatusraw.txt";
-		private const char APPEND_DELIMITER = '|';
+		private const string ACCOUNT_DATA_PATH = "accountinfo.csv";
+		private const string PROFILE_LINK_ONLY_PATH = "profiles.csv";
+		private const string BAN_STATUS_PATH = "banstatus.csv";
+		private const string BAN_STATUS_RAW_PATH = "banstatusraw.csv";
+		private const char APPEND_DELIMITER = ',';
 		private const char DELIMITER = ':';
 		private static readonly SemaphoreSlim WriteSync = new SemaphoreSlim(1, 1);
 
@@ -80,8 +80,8 @@ namespace SteamBanChecker
 
 			try
 			{
-				await File.AppendAllTextAsync(ACCOUNT_DATA_PATH, $"{steamId}{APPEND_DELIMITER}{steamPass}{APPEND_DELIMITER}{steam64}{APPEND_DELIMITER}{profileUrl}").ConfigureAwait(false);
-				await File.AppendAllTextAsync(PROFILE_LINK_ONLY_PATH, $"{steamId}{APPEND_DELIMITER}{steam64}").ConfigureAwait(false);
+				await File.AppendAllTextAsync(ACCOUNT_DATA_PATH, $"{steamId}{APPEND_DELIMITER}{steamPass}{APPEND_DELIMITER}{steam64}{APPEND_DELIMITER}{profileUrl}\n").ConfigureAwait(false);
+				await File.AppendAllTextAsync(PROFILE_LINK_ONLY_PATH, $"{steamId}{APPEND_DELIMITER}{steam64}\n").ConfigureAwait(false);
 			}
 			catch(Exception e)
 			{
@@ -105,9 +105,9 @@ namespace SteamBanChecker
 
 			try
 			{
-				string format = $"{accStatus.SteamId}{APPEND_DELIMITER}VAC_COUNT-{accStatus.NumberOfVACBans}{APPEND_DELIMITER}GAME_BAN_COUNT-{accStatus.NumberOfGameBans}";
+				string format = $"{accStatus.SteamId}{APPEND_DELIMITER}VAC_COUNT-{accStatus.NumberOfVACBans}{APPEND_DELIMITER}GAME_BAN_COUNT-{accStatus.NumberOfGameBans}\n";
 				await File.AppendAllTextAsync(BAN_STATUS_PATH, format).ConfigureAwait(false);
-				await File.AppendAllTextAsync(BAN_STATUS_RAW_PATH, accStatus.ToString()).ConfigureAwait(false);
+				await File.AppendAllTextAsync(BAN_STATUS_RAW_PATH, accStatus.ToString() + Environment.NewLine).ConfigureAwait(false);
 			}
 			catch(Exception e)
 			{
