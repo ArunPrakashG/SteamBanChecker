@@ -10,7 +10,7 @@ namespace SteamBanChecker
 		private static Dictionary<string, string>? Accounts = new Dictionary<string, string>();
 		private static BanStatus BanStatusGet = new BanStatus();
 		internal static AccountParser Parser = new AccountParser();
-		public static string API_KEY = ""; // fill this for getting ban status and stuff
+		public static string API_KEY = ""; // fill this for getting ban status and stuff; It will be asked during runtime if u didnt fill and recompile from source.
 
 		private static async Task Main(string[] args)
 		{
@@ -24,7 +24,7 @@ namespace SteamBanChecker
 				Environment.Exit(-1);
 			}
 
-			List<ulong> steamIds = new List<ulong>();
+			List<(ulong, string)> steamIds = new List<(ulong, string)>();
 			foreach (var pair in Accounts)
 			{
 				if (string.IsNullOrEmpty(pair.Key) || string.IsNullOrEmpty(pair.Value))
@@ -44,7 +44,7 @@ namespace SteamBanChecker
 				}
 
 				await Parser.Write(pair.Key, pair.Value, bot.Steam64, bot.VanityUrl).ConfigureAwait(false);
-				steamIds.Add(bot.Steam64);
+				steamIds.Add((bot.Steam64, pair.Key));
 				Program.Log($"{pair.Key} bot process completed!");
 			}
 
@@ -54,7 +54,7 @@ namespace SteamBanChecker
 			{
 				foreach (var stat in banStatus)
 				{
-					await Parser.WriteBanStatus(stat).ConfigureAwait(false);
+					await Parser.WriteBanStatus(GetSteamUsername(Convert.ToUInt64(stat.SteamId), steamIds),  stat).ConfigureAwait(false);
 					Program.Log($"Ban status saved for {stat.SteamId}");
 				}
 			}
@@ -62,6 +62,22 @@ namespace SteamBanChecker
 			Program.Log("All process completed!");
 			Program.Log("Press any key to exit...");
 			Console.ReadKey();
+		}
+
+		private static string GetSteamUsername(ulong targetid, List<(ulong, string)> steamIds)
+		{
+			if(targetid > 0 && steamIds != null && steamIds.Count > 0)
+			{
+				foreach(var id in steamIds)
+				{
+					if(id.Item1 == targetid && !string.IsNullOrEmpty(id.Item2))
+					{
+						return id.Item2;
+					}
+				}
+			}
+
+			return "Unknown";
 		}
 
 		public static void Log(string? msg)

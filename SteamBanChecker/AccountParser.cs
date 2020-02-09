@@ -94,9 +94,9 @@ namespace SteamBanChecker
 			}
 		}
 
-		public async Task WriteBanStatus(BanStatusStructure.Player accStatus)
+		public async Task WriteBanStatus(string? steamId, BanStatusStructure.Player accStatus)
 		{
-			if(accStatus == null)
+			if(accStatus == null || string.IsNullOrEmpty(steamId))
 			{
 				return;
 			}
@@ -105,9 +105,9 @@ namespace SteamBanChecker
 
 			try
 			{
-				string format = $"{accStatus.SteamId}{APPEND_DELIMITER}VAC_COUNT-{accStatus.NumberOfVACBans}{APPEND_DELIMITER}GAME_BAN_COUNT-{accStatus.NumberOfGameBans}\n";
+				string format = $"{steamId}{APPEND_DELIMITER}{accStatus.SteamId}{APPEND_DELIMITER}https://www.steamcommunity.com/profiles/{accStatus.SteamId}/{APPEND_DELIMITER}VAC_COUNT-{accStatus.NumberOfVACBans}{APPEND_DELIMITER}GAME_BAN_COUNT-{accStatus.NumberOfGameBans}\n";
 				await File.AppendAllTextAsync(BAN_STATUS_PATH, format).ConfigureAwait(false);
-				await File.AppendAllTextAsync(BAN_STATUS_RAW_PATH, accStatus.ToString() + Environment.NewLine).ConfigureAwait(false);
+				await File.AppendAllTextAsync(BAN_STATUS_RAW_PATH, $"{steamId}{APPEND_DELIMITER}https://www.steamcommunity.com/profiles/{accStatus.SteamId}/{APPEND_DELIMITER}" + accStatus.ToString() + Environment.NewLine).ConfigureAwait(false);
 			}
 			catch(Exception e)
 			{

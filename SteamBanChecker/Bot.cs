@@ -53,7 +53,7 @@ namespace SteamBanChecker
             SteamUser?.LogOn(new SteamUser.LogOnDetails
             {
                 Username = Account.steamID,
-                Password = Account.steamPass,
+                Password = Account.steamPass
             });
         }
 
@@ -69,18 +69,26 @@ namespace SteamBanChecker
             {
                 case EResult.AccountDisabled:
                     Program.Log($"{Account.steamID} account is suspended by steam.");
+                    Steam64 = 11;
+                    VanityUrl = "SUSPENDED!";
                     Disconnect();
                     break;
                 case EResult.InvalidPassword:
                     Program.Log($"{Account.steamID} password is incorrect.");
+                    Steam64 = 11;
+                    VanityUrl = "INVALID PASSWORD!";
                     Disconnect();
                     return;
                 case EResult.AccountLogonDenied:
                     Program.Log($"{Account.steamID} has SteamGuard enabled.");
+                    Steam64 = 11;
+                    VanityUrl = "STEAM GUARD!";
                     Disconnect();
                     break;
                 case EResult.AccountLoginDeniedNeedTwoFactor:
                     Program.Log($"{Account.steamID} has mobile authenticator enabled.");
+                    Steam64 = 11;
+                    VanityUrl = "MOBILE AUTHENTICATOR!";
                     Disconnect();
                     break;
                 case EResult.OK:
@@ -105,6 +113,7 @@ namespace SteamBanChecker
             {
                 Program.Log($"Unable to logon to Steam: {callback.Result} / {callback.ExtendedResult}");
                 IsRunning = false;
+                Disconnect();
                 return;
             }
         }

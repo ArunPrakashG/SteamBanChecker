@@ -39,18 +39,18 @@ namespace SteamBanChecker
 		private static readonly SemaphoreSlim Sync = new SemaphoreSlim(1, 1);
 		static HttpClient Client = new HttpClient();
 
-		public async Task<List<Player>?> GetStatus(List<ulong> steamIds)
+		public async Task<List<Player>?> GetStatus(List<(ulong, string)> steamIds)
 		{
 			if (steamIds == null || steamIds.Count <= 0)
 			{
-				Program.Log("Specified steamids are empty.");
+				Program.Log("Specified steam ids are empty.");
 				return null;
 			}
 
 			return await Get(steamIds).ConfigureAwait(false);
 		}
 
-		private async Task<List<Player>?> Get(List<ulong> steamIds)
+		private async Task<List<Player>?> Get(List<(ulong, string)> steamIds)
 		{
 			if (string.IsNullOrEmpty(Program.API_KEY))
 			{
@@ -64,14 +64,14 @@ namespace SteamBanChecker
 
 			try
 			{
-				foreach (ulong id in steamIds)
+				foreach (var id in steamIds)
 				{
-					if (id <= 0)
+					if (id.Item1 <= 0 || string.IsNullOrEmpty(id.Item2))
 					{
 						continue;
 					}
 
-					requestUrl = requestUrl + id.ToString() + ",";
+					requestUrl = requestUrl + id.Item1.ToString() + ",";
 				}
 				
 				Program.Log($"Requesting --> {requestUrl}");
