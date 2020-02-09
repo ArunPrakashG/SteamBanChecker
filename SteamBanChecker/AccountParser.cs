@@ -47,8 +47,16 @@ namespace SteamBanChecker
 
 					if (accInfo.Length == 2)
 					{
-						accounts.Add(accInfo[0], accInfo[1]);
-						Program.Log($"Parsed {acc} ...");
+						try
+						{
+							accounts.Add(accInfo[0], accInfo[1]);
+							Program.Log($"Parsed {acc} ...");
+						}
+						catch (ArgumentException)
+						{
+							Program.Log($"{acc} is repeated; Skipping...");
+							continue;
+						}						
 					}
 				}
 			}
