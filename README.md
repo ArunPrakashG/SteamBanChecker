@@ -2,6 +2,7 @@
 Checks 
 * Ban status (VAC, Game ban, Economy ban, vac count, game ban count)
 * Steam profile link, steam 64 id of the profile.
+
 of the specified account(s) and writes the data into CSV files for easy import into google spreadsheets.
 
 To check ban status, you will have to provide a valid Steam Web Api Key which you can get from here -> https://steamcommunity.com/dev/apikey
