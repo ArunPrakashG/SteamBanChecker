@@ -1,5 +1,5 @@
 # Steam Ban Checker <br>
-[Download](https://github.com/SynergYFTW/SteamBanChecker/releases/download/1.4.0.0/BanChecker.zip) | [Setting up](https://github.com/SynergYFTW/SteamBanChecker/wiki/Setting-up) 
+[Download](https://github.com/SynergYFTW/SteamBanChecker/releases/download/1.4.0.0/BanChecker.zip) | [Setting up](https://github.com/SynergYFTW/SteamBanChecker/wiki/Setting-up) <br>
 Checks 
 * Ban status (VAC, Game ban, Economy ban, vac count, game ban count)
 * Steam profile link, steam 64 id of the profile.
